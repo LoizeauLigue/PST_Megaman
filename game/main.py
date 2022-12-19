@@ -1,14 +1,23 @@
 import pygame
-
+from sys import exit
+#from Player import Player
+width = 800
+height = 400
 pygame.init()
-screen = pygame.display.set_mode((800, 400))
+screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Megaman')
 clock = pygame.time.Clock()
 
 # Mise du fond
+fillbackground = pygame.Surface((width, height))
+color = (244, 164, 96)
+fillbackground.fill(color)
+
 background = pygame.image.load('Resources/background/map_1.png')
-test_surface = pygame.Surface((100, 200))
-test_surface.fill('RED')
+
+life = pygame.Surface((15, 30))
+life.fill('RED')
+
 
 # Joueur
 megaman_basic1 = pygame.image.load('Resources/megaman/idle.png')
@@ -24,10 +33,14 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-    # screen.blit(test_surface, (0, 0))
+    screen.blit(fillbackground, (0, 0))
     screen.blit(background, (0, 0))
+    screen.blit(life, (3, 1))
     screen.blit(megaman[int(choice)], (player_x, 50))
     player_x += 1
-    choice = (choice + 0.1) % 3
+    choice = (choice + 0.15) % 3
+    if player_x > 800:
+        player_x = 0
+
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(60) #frame rate
