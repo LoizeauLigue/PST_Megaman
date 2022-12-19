@@ -26,10 +26,8 @@ while True:
             exit()
     # screen.blit(test_surface, (0, 0))
     screen.blit(background, (0, 0))
-
     screen.blit(megaman[int(choice)], (player_x, 50))
     player_x += 1
     choice = (choice + 0.1) % 3
-
     pygame.display.update()
     clock.tick(60)
