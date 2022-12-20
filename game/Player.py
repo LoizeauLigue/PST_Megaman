@@ -1,21 +1,47 @@
 import pygame
 from pygame.locals import *
-class Player:
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.vel = 5
-        self.isJump = False
-        self.jumpCount = 10
-        self.left = False
-        self.right = False
-        self.walkCount = 0
-        self.standing = True
-        self.hitbox = (self.x + 17, self.y + 11, 29, 52)
-        self.health = 10
-        self.visible = True
-        self.walkRight = [pygame.image.load('Resources/megaman/walk_1.png'), pygame.image.load('Resources/megaman/walk_2.png'), pygame.image.load('Resources/megaman/walk_3.png')]
-        self.walkLeft = [pygame.image.load('Resources/megaman/walk_1.png'), pygame.image.load('Resources/megaman/walk_2.png'), pygame.image.load('Resources/megaman/walk_3.png')]
-        self.idle = [pygame.image.load('Resources/megaman/idle.png'),
+
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self, pos):
+        self.image = pygame.Surface((50, 50))
+        self.image.fill((255, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = pos
+        self.speed = 5
+        self.x = 0
+        self.y = 0
+        super().__init__()
+
+    def get_input(self):
+        self.x = 0
+        self.y = 0
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.x = -self.speed
+            print("left")
+        if keys[pygame.K_RIGHT]:
+            self.x = self.speed
+            print("right")
+        if keys[pygame.K_UP]:
+            self.y = -self.speed
+            print("up")
+        if keys[pygame.K_DOWN]:
+            self.y = self.speed
+            print("down")
+
+    def display(self, screen):
+        screen.blit(self.image, self.rect)
+
+    def update(self):
+        self.get_input()
+        self.rect.x += self.x
+        self.rect.y += self.y
+
+    def des_update(self):
+        if self.x:
+            self.rect.x -= self.x
+            self.x = 0
+        if self.y:
+            self.rect.y -= self.y
+            self.y = 0
