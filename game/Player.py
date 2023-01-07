@@ -8,46 +8,39 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill('red')
 
-        self.rect = self.image.get_rect(topright=pos)
+        self.rect = self.image.get_rect(topleft=pos)
 
-        self.speed = 3
-        self.health = 100
-        self.max_health = 100
-        self.attack = 10
-
-        self.right = False
-        self.left = False
+        self.speed = 5
+        self.direction = pygame.math.Vector2(0,0)
+        self.gravity = 0.05
+        self.jump_speed = -6
         self.all_projectiles = pygame.sprite.Group()
 
-
+    def apply_gravity(self):
+        self.direction.y += self.gravity
+        self.rect.y += self.direction.y
+    def jump(self):
+        self.direction.y = self.jump_speed
     def launch_projectile(self):
         self.all_projectiles.add(projectile(self))
     def get_input(self):
-        self.x = 0
-        self.y = 0
         bool = 0
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            self.x = -self.speed
-            self.left = True
-            self.right = False
+            self.direction.x = -1
+
             print("left")
-        if keys[pygame.K_RIGHT]:
-            self.x = self.speed
-            self.right = True
-            self.left = False
+        elif keys[pygame.K_RIGHT]:
+            self.direction.x = 1
+
             print("right")
+        else:
+            self.direction.x = 0
+
         if keys[pygame.K_UP]:
-            self.y = -self.speed
+            self.jump()
             print("up")
-        if keys[pygame.K_DOWN]:
-            self.y = self.speed
-            print("down")
 
-
-        #if keys[pygame.K_SPACE]:
-         #   self.launch_projectile()
-          #  print("space")
 
 
 
@@ -58,8 +51,10 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.get_input()
-        self.rect.x += self.x
-        self.rect.y += self.y
+        self.apply_gravity()
+        self.rect.x += self.direction.x * self.speed
+
+
 
     def des_update(self):
         if self.x:
@@ -71,8 +66,6 @@ class Player(pygame.sprite.Sprite):
 
 
 
-            # Met à jour l'interface utilisateur, le jeu, etc.
-            # Vous devrez mettre ceci dans votre propre boucle de jeu
 
 
 
