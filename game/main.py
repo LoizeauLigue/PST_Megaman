@@ -1,27 +1,42 @@
 import pygame
 from sys import exit
-from Player import Player
 from Stage import Stage
-width = 1480
+from Game import Game
+from Setting import *
+
+width = 1000
 height = 720
 pygame.init()
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Megaman')
 clock = pygame.time.Clock()
-Stage = Stage((width, height))
-Player = Player((100, 300))
+#Stage = Stage((width, height))
+#game = Game()
+Stage = Stage(level_map, screen)
+#game.player.add(Stage.player)
 
 while True:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+      if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_SPACE:
+            Stage.player.launch_projectile()
+      if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-    screen.fill((0, 0, 0))
-    Stage.display(screen)
-    Player.display(screen)
-    Player.update()
-    #if Player.rect.colliderect(Stage.background_rect):
-        #Player.des_update()
-    print(Player.rect.colliderect(Stage.background_rect))
+    #Stage.display(screen)
+
+    for projectile in Stage.player.all_projectiles:
+           projectile.move()
+    Stage.player.all_projectiles.draw(screen)
+    Stage.player.display(screen)
+    Stage.player.update()
+    Stage.run()
+
+    #if game.player.rect.colliderect(Stage.background_rect):
+      #  game.player.des_update()
+    #print(Player.rect.colliderect(Stage.background_rect))
     pygame.display.update()
+
+
     clock.tick(60) #frame rate
+    screen.fill('black')
