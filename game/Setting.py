@@ -4,11 +4,11 @@ level_map = [
 '                        ',
 'XX    XX       XX   XX  ',
 'XX                      ',
-'XXXX                    ',
+'XXXX      P             ',
 'XXXX                    ',
 'XX                      ',
 '                        ',
-'  P XXXX                ',
+'   XXXX                 ',
 'XXXXXXXXXXXXXXXXXXXXXXX ']
 
 title_size = 64

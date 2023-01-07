@@ -3,11 +3,14 @@ from Player import Player
 from Tile import Tile
 from Setting import title_size
 from Game import Game
+
 class Stage:
     def __init__(self,level_data, surface):
         self.display_surface = surface
         self.setup_level(level_data)
         self.world_shift = 0
+
+
     def setup_level(self,layout):
         self.tiles = pygame.sprite.Group()
         self.player = pygame.sprite.GroupSingle()
@@ -18,9 +21,10 @@ class Stage:
                 if cell == 'X':
                     self.tiles.add(Tile((x,y),title_size))
                 if cell == 'P':
-                    self.player = Player((x,y))
-                    self.player.rect.x = x
-                    self.player.rect.y = y
+                    player_sprite = Player((x,y))
+                    self.player.add(player_sprite)
+
     def run(self):
        self.tiles.update(self.world_shift)
        self.tiles.draw(self.display_surface)
+       self.player.draw(self.display_surface)
