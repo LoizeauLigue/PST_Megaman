@@ -7,14 +7,14 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface((50, 50))
         self.image.fill('red')
-        self.rect = self.image.get_rect()
-        self.rect.center = pos
-        self.speed = 5
-        self.rect.x = 500
+
+        self.rect = self.image.get_rect(topright=pos)
+
+        self.speed = 3
         self.health = 100
         self.max_health = 100
         self.attack = 10
-        self.rect.y = 500
+
         self.right = False
         self.left = False
         self.all_projectiles = pygame.sprite.Group()
@@ -27,7 +27,6 @@ class Player(pygame.sprite.Sprite):
         self.y = 0
         bool = 0
         keys = pygame.key.get_pressed()
-        key = pygame.key.get_focused()
         if keys[pygame.K_LEFT]:
             self.x = -self.speed
             self.left = True
@@ -46,8 +45,9 @@ class Player(pygame.sprite.Sprite):
             print("down")
 
 
-        if keys[pygame.K_SPACE]:
-            self.launch_projectile()
+        #if keys[pygame.K_SPACE]:
+         #   self.launch_projectile()
+          #  print("space")
 
 
 
@@ -68,6 +68,11 @@ class Player(pygame.sprite.Sprite):
         if self.y:
             self.rect.y -= self.y
             self.y = 0
+
+
+
+            # Met à jour l'interface utilisateur, le jeu, etc.
+            # Vous devrez mettre ceci dans votre propre boucle de jeu
 
 
 
