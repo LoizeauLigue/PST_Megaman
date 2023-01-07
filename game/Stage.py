@@ -5,26 +5,30 @@ from Setting import title_size
 from Game import Game
 
 class Stage:
-    def __init__(self,level_data, surface):
+    def __init__(self, level_data, surface):
+        self.tiles = None
+        self.player = None
         self.display_surface = surface
         self.setup_level(level_data)
         self.world_shift = 0
 
-
-    def setup_level(self,layout):
+    def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
         self.player = pygame.sprite.GroupSingle()
-        for row_index,row in enumerate(layout):
-            for col_index,cell in enumerate(row):
+        for row_index, row in enumerate(layout):
+            for col_index, cell in enumerate(row):
                 x = col_index * title_size
                 y = row_index * title_size
                 if cell == 'X':
-                    self.tiles.add(Tile((x,y),title_size))
+                    self.tiles.add(Tile((x, y), title_size))
                 if cell == 'P':
-                    player_sprite = Player((x,y))
-                    self.player.add(player_sprite)
+                    self.player = Player((x, y))
+                    # self.player.add(player_sprite)
 
     def run(self):
-       self.tiles.update(self.world_shift)
-       self.tiles.draw(self.display_surface)
-       self.player.draw(self.display_surface)
+        self.tiles.update(self.world_shift)
+        self.tiles.draw(self.display_surface)
+        #self.player.draw(self.display_surface)
+
+
+
