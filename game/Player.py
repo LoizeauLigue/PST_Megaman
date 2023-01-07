@@ -5,7 +5,8 @@ bullet_size = 5
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        self.image = pygame.image.load('Resources/megaman/idle.png')
+        self.image = pygame.Surface((50, 50))
+        self.image.fill('red')
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.speed = 5
@@ -26,6 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.y = 0
         bool = 0
         keys = pygame.key.get_pressed()
+        key = pygame.key.get_focused()
         if keys[pygame.K_LEFT]:
             self.x = -self.speed
             self.left = True
