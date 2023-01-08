@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 
+
 class projectile(pygame.sprite.Sprite):
     def __init__(self,player):
         super().__init__()
