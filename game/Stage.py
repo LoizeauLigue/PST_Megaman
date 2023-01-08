@@ -1,8 +1,9 @@
 import pygame
 from Player import Player
 from Tile import Tile
-from Setting import title_size , screen_width, screen_height, level_map
+from Setting import title_size, screen_width, screen_height, level_map
 from Game import Game
+
 
 class Stage:
     def __init__(self, level_data, surface):
@@ -22,30 +23,53 @@ class Stage:
                 if cell == 'X':
                     self.tiles.add(Tile((x, y), title_size))
                 if cell == 'P':
-                    self.player = Player((x, y))
-                    # self.player.add(player_sprite)
-    def scroll_x(self):
-       player_x = self.player.rect.centerx
-       direction_x = self.player.direction.x
-       if player_x < 475 and direction_x <0:
-            self.world_shift = 6
-            self.player.speed = 0
-       elif player_x > 475 and direction_x >0:
-            self.world_shift = -6
-            self.player.speed = 0
-       else:
-            self.world_shift = 0
-            self.player.speed = 5
+                    self.player.add(Player((x, y)))
 
+    def scroll_x(self):
+        # player_x = self.player.rect.centerx
+        # direction_x = self.player.direction.x
+        player_x = self.player.sprite.rect.centerx
+        direction_x = self.player.sprite.direction.x
+        if player_x < 475 and direction_x < 0:
+            self.world_shift = 6
+            self.player.sprite.speed = 0
+        elif player_x > 475 and direction_x > 0:
+            self.world_shift = -6
+            self.player.sprite.speed = 0
+        else:
+            self.world_shift = 0
+            self.player.sprite.speed = 5
+
+    def display(self, screen):
+        self.tiles.draw(self.display_surface)
+        self.player.draw(self.display_surface)
+
+    def horizontal_collision(self):
+        player = self.player.sprite
+        player.rect.x += player.direction.x * player.speed
+        for sprite in self.tiles.sprites():
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.x < 0:
+                    player.rect.left = sprite.rect.right
+                if player.direction.x > 0:
+                    player.rect.right = sprite.rect.left
+
+    def vertical_collision(self):
+        player = self.player.sprite
+        player.apply_gravity()
+        for sprite in self.tiles.sprites():
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.y > 0:
+                    player.rect.bottom = sprite.rect.top
+                    player.direction.y = 0
+                if player.direction.y < 0:
+                    player.rect.top = sprite.rect.bottom
+                    player.direction.y = 0
 
     def run(self):
         self.tiles.update(self.world_shift)
-        self.tiles.draw(self.display_surface)
         self.player.update()
         self.scroll_x()
-
-        #self.player.draw(self.display_surface)
-
-
-
-
+        # collision
+        self.horizontal_collision()
+        self.vertical_collision()
