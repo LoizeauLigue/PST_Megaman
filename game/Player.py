@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0.8
         self.jump_speed = -10
         self.all_projectiles = pygame.sprite.Group()
+        self.right = False
 
     def apply_gravity(self):
         self.direction.y += self.gravity
@@ -33,10 +34,12 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.direction.x = -1
+            self.right = False
 
             print("left")
         elif keys[pygame.K_RIGHT]:
             self.direction.x = 1
+            self.right = True
 
             print("right")
         else:
