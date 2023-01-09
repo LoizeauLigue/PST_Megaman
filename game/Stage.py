@@ -3,6 +3,7 @@ from Player import Player
 from Tile import Tile
 from Setting import title_size, screen_width, screen_height, level_map
 from Game import Game
+from Enemy import Enemy
 
 
 class Stage:
@@ -16,6 +17,7 @@ class Stage:
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
         self.player = pygame.sprite.GroupSingle()
+        self.enemies = pygame.sprite.Group()
         for row_index, row in enumerate(layout):
             for col_index, cell in enumerate(row):
                 x = col_index * title_size
@@ -24,6 +26,8 @@ class Stage:
                     self.tiles.add(Tile((x, y), title_size))
                 if cell == 'P':
                     self.player.add(Player((x, y)))
+                if cell == 'E':
+                    self.enemies.add(Enemy((x, y), title_size))
 
     def scroll_x(self):
         # player_x = self.player.rect.centerx
@@ -39,10 +43,23 @@ class Stage:
         else:
             self.world_shift = 0
             self.player.sprite.speed = 5
+    def ennemy_collision(self):
+        for enemy in self.enemies.sprites():
+            if enemy.rect.colliderect(self.player.sprite.rect):
+                print("collision")
+            #ecrit une fonction qui fait disparaitre le monstre si il touche un mur
+    def ennemy_Wall_collision(self):
+        for enemy in self.enemies.sprites():
+            for sprite in self.tiles.sprites():
+                if sprite.rect.colliderect(enemy.rect):
+                    #call methode reversed from ennemy
+                    enemy.reversed()
 
+                    print("collisionwall")
     def display(self, screen):
         self.tiles.draw(self.display_surface)
         self.player.draw(self.display_surface)
+        self.enemies.draw(self.display_surface)
 
     def horizontal_collision(self):
         player = self.player.sprite
@@ -69,7 +86,10 @@ class Stage:
     def run(self):
         self.tiles.update(self.world_shift)
         self.player.update()
+        self.enemies.update(self.world_shift)
         self.scroll_x()
         # collision
         self.horizontal_collision()
         self.vertical_collision()
+        self.ennemy_collision()
+        self.ennemy_Wall_collision()
