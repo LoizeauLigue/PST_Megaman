@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
         self.speed = 5
-        self.direction = pygame.math.Vector2(0,0)
+        self.direction = pygame.math.Vector2(0, 0)
         self.gravity = 0.8
         self.jump_speed = -10
         self.all_projectiles = pygame.sprite.Group()

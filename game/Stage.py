@@ -43,19 +43,20 @@ class Stage:
         else:
             self.world_shift = 0
             self.player.sprite.speed = 5
-    def ennemy_collision(self):
-        for enemy in self.enemies.sprites():
-            if enemy.rect.colliderect(self.player.sprite.rect):
-                print("collision")
-            #ecrit une fonction qui fait disparaitre le monstre si il touche un mur
-    def ennemy_Wall_collision(self):
-        for enemy in self.enemies.sprites():
-            for sprite in self.tiles.sprites():
-                if sprite.rect.colliderect(enemy.rect):
-                    #call methode reversed from ennemy
-                    enemy.reversed()
 
-                    print("collisionwall")
+    #def ennemy_collision(self):
+    #    for enemy in self.enemies.sprites():
+    #        if enemy.rect.colliderect(self.player.sprite.rect):
+    #            print("collision")
+            #ecrit une fonction qui fait disparaitre le monstre si il touche un mur
+    #def ennemy_Wall_collision(self):
+    #    for enemy in self.enemies.sprites():
+    #        for sprite in self.tiles.sprites():
+    #            if sprite.rect.colliderect(enemy.rect):
+    #                #call methode reversed from ennemy
+    #                enemy.reversed()
+
+    #                print("collisionwall")
     def display(self, screen):
         self.tiles.draw(self.display_surface)
         self.player.draw(self.display_surface)
@@ -83,6 +84,34 @@ class Stage:
                     player.rect.top = sprite.rect.bottom
                     player.direction.y = 0
 
+    def horizontal_collision_enemy(self):
+        for sprite_enemy in self.enemies.sprites():
+            sprite_enemy.rect.x += sprite_enemy.direction.x * sprite_enemy.speed
+            for sprite_tiles in self.tiles.sprites():
+                if sprite_tiles.rect.colliderect(sprite_enemy.rect):
+                    if sprite_enemy.direction.x < 0:
+                        sprite_enemy.rect.left = sprite_tiles.rect.right
+                    if sprite_enemy.direction.x > 0:
+                        sprite_enemy.rect.right = sprite_tiles.rect.left
+
+    def vertical_collision_enemy(self):
+        for sprite_enemy in self.enemies.sprites():
+            sprite_enemy.apply_gravity()
+            for sprite in self.tiles.sprites():
+                if sprite.rect.colliderect(sprite_enemy.rect):
+                    if sprite_enemy.direction.y > 0:
+                        sprite_enemy.rect.bottom = sprite.rect.top
+                        sprite_enemy.direction.y = 0
+                    if sprite_enemy.direction.y < 0:
+                        sprite_enemy.rect.top = sprite.rect.bottom
+                        sprite_enemy.direction.y = 0
+
+    def collision_enemy_player(self):
+        player = self.player.sprite
+        for sprite_enemy in self.enemies.sprites():
+            print(player.rect.colliderect(sprite_enemy.rect))
+
+
     def run(self):
         self.tiles.update(self.world_shift)
         self.player.update()
@@ -91,5 +120,8 @@ class Stage:
         # collision
         self.horizontal_collision()
         self.vertical_collision()
-        self.ennemy_collision()
-        self.ennemy_Wall_collision()
+        #self.ennemy_collision()
+        #self.ennemy_Wall_collision()
+        self.horizontal_collision_enemy()
+        self.vertical_collision_enemy()
+        self.collision_enemy_player()
