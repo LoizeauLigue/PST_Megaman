@@ -17,6 +17,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
+                Stage.player.sprite.is_shooting = True
                 Stage.player.sprite.launch_projectile()
         if event.type == pygame.QUIT:
             pygame.quit()
