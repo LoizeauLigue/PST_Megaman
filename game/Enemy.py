@@ -1,5 +1,6 @@
 import pygame
 from Tile import Tile
+from Projectile import projectile_enemie
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -8,21 +9,29 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.Surface((size, size))
         self.image.fill('red')
         self.rect = self.image.get_rect(topleft=pos)
-        self.speed = 5
+        self.direction = pygame.math.Vector2(0, 0)
         self.gravity = 4
+        self.all_projectiles = pygame.sprite.Group()
 
     def update(self, x_shift):
        # self.rect.x += x_shift
-        self.move()
+       for projectile_enemie in self.all_projectiles:
+           projectile_enemie.move()
+           self.launch_projectile()
+           print("shoot2")
+
+       self.move()
 
     def move (self):
-        self.rect.x -= self.speed
+        self.direction.x += 1
         self.rect.y += self.gravity
 
-
+    def launch_projectile(self):
+        self.all_projectiles.add(projectile_enemie(self))
+        print("shoot")
 
     def reversed(self):
-        self.speed *= -1
+        pass
 
 
     def shoot(self):

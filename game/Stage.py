@@ -34,15 +34,19 @@ class Stage:
         # direction_x = self.player.direction.x
         player_x = self.player.sprite.rect.centerx
         direction_x = self.player.sprite.direction.x
+
         if player_x < 475 and direction_x < 0:
             self.world_shift = 6
             self.player.sprite.speed = 0
+
         elif player_x > 475 and direction_x > 0:
             self.world_shift = -6
             self.player.sprite.speed = 0
+
         else:
             self.world_shift = 0
             self.player.sprite.speed = 5
+
     def ennemy_collision(self):
         for enemy in self.enemies.sprites():
             if enemy.rect.colliderect(self.player.sprite.rect):
