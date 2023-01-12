@@ -33,7 +33,7 @@ while True:
             screen.blit(background_image, background_rect)
     Stage.player.sprite.all_projectiles.draw(screen)
     Stage.display(screen)
-    Stage.run()
+    Stage.run(screen)
     pygame.display.update()
 
     clock.tick(60)  # frame rate
