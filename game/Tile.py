@@ -1,10 +1,13 @@
 import pygame
 from Setting import *
+from support import import_folder
 class Tile(pygame.sprite.Sprite):
     def __init__(self, pos, size):
         super().__init__()
-        self.image = pygame.Surface((size, size))
-        self.image.fill('grey')
+        self.image = pygame.image.load('../game/Resources/background/brick.png').convert_alpha()
+
+        #self.image = pygame.Surface((size, size))
+        #self.image.fill('grey')
         self.rect = self.image.get_rect(topleft=pos)
 
     def update(self,x_shift):
