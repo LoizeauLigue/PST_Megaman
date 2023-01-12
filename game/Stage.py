@@ -4,6 +4,8 @@ from Tile import Tile
 from Setting import title_size, screen_width, screen_height, level_map
 from Game import Game
 from Enemy import Enemy
+from Projectile import projectile
+from Boss import Boss
 
 
 class Stage:
@@ -20,6 +22,8 @@ class Stage:
         self.tiles = pygame.sprite.Group()
         self.player = pygame.sprite.GroupSingle()
         self.enemies = pygame.sprite.Group()
+        self.boss = pygame.sprite.Group()
+
         for row_index, row in enumerate(layout):
             for col_index, cell in enumerate(row):
                 x = col_index * title_size
@@ -30,15 +34,20 @@ class Stage:
                     self.player.add(Player((x, y)))
                 if cell == 'E':
                     self.enemies.add(Enemy((x, y), title_size))
+                if cell == 'B':
+                    self.boss.add(Boss((x, y), title_size))
 
     def scroll_x(self):
         # player_x = self.player.rect.centerx
         # direction_x = self.player.direction.x
         player_x = self.player.sprite.rect.centerx
         direction_x = self.player.sprite.direction.x
+
         if player_x < 475 and direction_x < 0:
             self.world_shift = 6
             self.player.sprite.speed = 0
+
+
         elif player_x > 475 and direction_x > 0:
             self.world_shift = -6
             self.player.sprite.speed = 0
@@ -50,6 +59,7 @@ class Stage:
         self.tiles.draw(self.display_surface)
         self.player.draw(self.display_surface)
         self.enemies.draw(self.display_surface)
+        self.boss.draw(self.display_surface)
 
     def horizontal_collision(self):
         player = self.player.sprite
@@ -111,13 +121,14 @@ class Stage:
 
     def collision_enemy_player(self):
         player = self.player.sprite
-        for sprite_enemy in self.enemies.sprites():
-            print(player.rect.colliderect(sprite_enemy.rect))
+        #for sprite_enemy in self.enemies.sprites():
+           #print(player.rect.colliderect(sprite_enemy.rect))
 
-    def run(self):
+    def run(self,screen):
         self.tiles.update(self.world_shift)
-        self.player.update()
-        self.enemies.update(self.world_shift)
+        self.player.update(screen)
+        self.enemies.update(self.world_shift,screen)
+        self.boss.update(self.world_shift,screen)
         self.scroll_x()
         # collision
         self.horizontal_collision()

@@ -2,7 +2,7 @@ import pygame
 from Projectile import projectile
 from support import import_folder
 from pygame.locals import *
-
+import time
 bullet_size = 5
 
 
@@ -32,6 +32,9 @@ class Player(pygame.sprite.Sprite):
         self.jump_speed = -15
         self.all_projectiles = pygame.sprite.Group()
         self.right = True
+        self.health = 10
+        self.max_health = 10
+        self.time = time.time()
 
     def apply_gravity(self):
         self.direction.y += self.gravity
@@ -41,29 +44,46 @@ class Player(pygame.sprite.Sprite):
         self.direction.y = self.jump_speed
 
     def launch_projectile(self):
+
         self.all_projectiles.add(projectile(self))
 
+    def set_projectile_speed(self, speed):
+        for projectile in self.all_projectiles:
+            projectile.speed = speed
+
     def get_input(self):
+
         bool = 0
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.direction.x = -1
             self.right = False
+            self.set_projectile_speed(12)
 
             print("left")
         elif keys[pygame.K_RIGHT]:
             self.direction.x = 1
             self.right = True
+            self.set_projectile_speed(12)
 
             print("right")
         else:
             self.direction.x = 0
+            self.set_projectile_speed(12)
+
 
         if keys[pygame.K_UP] and self.on_ground:
             self.jump()
             print("up")
+        if time.time() + 2 > self.time and keys[pygame.K_BACKSPACE]:
+            self.health_bar_decrease(1)
+            self.time = time.time() + 3
+            print("space")
 
-    def update(self):
+
+
+    def update(self,screen):
+        self.draw(screen)
         self.get_input()
         self.get_status()
         self.animate()
@@ -122,3 +142,36 @@ class Player(pygame.sprite.Sprite):
                     self.status = 'idleandshoot'
                 else:
                     self.status = 'idle'
+
+
+    def shooting_move(self):
+        for projectile in self.all_projectiles:
+            projectile.move()
+
+
+
+    def health_bar(self,screen):
+        # display the health bar
+        pygame.draw.rect(screen, (60, 63, 60), [35, 25, 250, 25])
+        pygame.draw.rect(screen, (111, 210, 46), [35, 25, 250 - (25* (10 - self.health)), 25])
+
+
+    def health_bar_decrease(self,damage):
+        #decresing the health
+        self.health -= damage
+        if self.health <= 0:
+            self.close_window()
+
+    def draw(self, screen):
+        self.health_bar(screen)
+
+
+
+    def close_window(self):
+        pygame.quit()
+        quit()
+
+    def large_shoot(self):
+        self.all_projectiles.add(large_projectile(self))
+        self.is_shooting = True
+
