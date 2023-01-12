@@ -22,14 +22,18 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-
     for projectile in Stage.player.sprite.all_projectiles:
         projectile.move()
-    Stage.player.sprite.all_projectiles.draw(screen)
 
+    screen.fill('black')
+    background_image = pygame.image.load('../game/Resources/background/background.png').convert_alpha()
+    for i in range(45):
+        for j in range(11):
+            background_rect = background_image.get_rect(topleft=(j*94, i * 16))
+            screen.blit(background_image, background_rect)
+    Stage.player.sprite.all_projectiles.draw(screen)
     Stage.display(screen)
     Stage.run()
     pygame.display.update()
 
     clock.tick(60)  # frame rate
-    screen.fill('black')
