@@ -25,6 +25,9 @@ class Player(pygame.sprite.Sprite):
         self.right = True
         self.is_shooting = False
         self.is_shooting_cooldown_animation = 5
+        self.press_down_true = 0
+        self.timer_power_shot = 200
+        self.timer_power_shot_max = 200
         # movement of player
         self.speed = 5
         self.direction = pygame.math.Vector2(0, 0)
@@ -33,6 +36,9 @@ class Player(pygame.sprite.Sprite):
         self.all_projectiles = pygame.sprite.Group()
         self.right = True
         self.health = 10
+        self.health_timer = 50
+        self.health_timer_max = 50
+        self.health_timer_hitposition_right = 0
         self.max_health = 10
         self.time = time.time()
 
@@ -43,9 +49,9 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         self.direction.y = self.jump_speed
 
-    def launch_projectile(self):
+    def launch_projectile(self, is_big):
 
-        self.all_projectiles.add(projectile(self))
+        self.all_projectiles.add(projectile(self, is_big))
 
     def set_projectile_speed(self, speed):
         for projectile in self.all_projectiles:
@@ -60,13 +66,13 @@ class Player(pygame.sprite.Sprite):
             self.right = False
             self.set_projectile_speed(12)
 
-            print("left")
+            #print("left")
         elif keys[pygame.K_RIGHT]:
             self.direction.x = 1
             self.right = True
             self.set_projectile_speed(12)
 
-            print("right")
+            #print("right")
         else:
             self.direction.x = 0
             self.set_projectile_speed(12)
@@ -74,11 +80,11 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_UP] and self.on_ground:
             self.jump()
-            print("up")
+            #print("up")
         if time.time() + 2 > self.time and keys[pygame.K_BACKSPACE]:
             self.health_bar_decrease(1)
             self.time = time.time() + 3
-            print("space")
+            #print("space")
 
 
 
@@ -90,7 +96,7 @@ class Player(pygame.sprite.Sprite):
 
     def import_player_assets(self):
         player_path = '../game/Resources/megaman/'
-        self.animations = {'idle': [], 'run': [], 'jump': [], 'idleandshoot': [], 'runandshoot': [], 'jumpandshoot': []}
+        self.animations = {'idle': [], 'run': [], 'jump': [], 'idleandshoot': [], 'runandshoot': [], 'jumpandshoot': [], 'hurt': []}
         for animation in self.animations.keys():
             fullpath = player_path + animation
             self.animations[animation] = import_folder(fullpath)
@@ -101,7 +107,12 @@ class Player(pygame.sprite.Sprite):
         self.frame_index += self.animation_speed
         if self.frame_index >= len(animation):
             self.frame_index = 0
-        if self.right:
+        if self.status == 'hurt':
+            if self.health_timer_hitposition_right:
+                self.image = animation[int(self.frame_index)]
+            else:
+                self.image = pygame.transform.flip(animation[int(self.frame_index)], True, False)
+        elif self.right:
             self.image = animation[int(self.frame_index)]
         else:
             self.image = pygame.transform.flip(animation[int(self.frame_index)], True, False)
@@ -120,28 +131,33 @@ class Player(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(midtop=self.rect.midtop)
 
     def get_status(self):
-        if self.is_shooting:
-            if self.is_shooting_cooldown_animation == 0:
-                self.is_shooting_cooldown_animation = 70
-                self.is_shooting = False
-            else:
-                self.is_shooting_cooldown_animation -= 1
-        if not self.on_ground:
-            if self.is_shooting:
-                self.status = 'jumpandshoot'
-            else:
-                self.status = 'jump'
+        if self.health_timer >= 1:
+            self.status = 'hurt'
+            self.is_shooting_cooldown_animation = 70
+            self.is_shooting = False
         else:
-            if self.direction.x != 0:
-                if self.is_shooting:
-                    self.status = 'runandshoot'
+            if self.is_shooting:
+                if self.is_shooting_cooldown_animation == 0:
+                    self.is_shooting_cooldown_animation = 70
+                    self.is_shooting = False
                 else:
-                    self.status = 'run'
+                    self.is_shooting_cooldown_animation -= 1
+            if not self.on_ground:
+                if self.is_shooting:
+                    self.status = 'jumpandshoot'
+                else:
+                    self.status = 'jump'
             else:
-                if self.is_shooting:
-                    self.status = 'idleandshoot'
+                if self.direction.x != 0:
+                    if self.is_shooting:
+                        self.status = 'runandshoot'
+                    else:
+                        self.status = 'run'
                 else:
-                    self.status = 'idle'
+                    if self.is_shooting:
+                        self.status = 'idleandshoot'
+                    else:
+                        self.status = 'idle'
 
 
     def shooting_move(self):
@@ -158,9 +174,12 @@ class Player(pygame.sprite.Sprite):
 
     def health_bar_decrease(self,damage):
         #decresing the health
-        self.health -= damage
-        if self.health <= 0:
-            self.close_window()
+        if self.health_timer <= 0:
+            self.health_timer = self.health_timer_max
+            self.health_timer_hitposition_right = self.right
+            self.health -= damage
+            if self.health <= 0:
+                self.close_window()
 
     def draw(self, screen):
         self.health_bar(screen)
