@@ -17,14 +17,27 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                Stage.player.sprite.is_shooting = True
-                Stage.player.sprite.launch_projectile()
+                Stage.player.sprite.press_down_true = 1
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                if Stage.player.sprite.health_timer < 1 and Stage.player.sprite.press_down_true == 1:
+                    Stage.player.press_down_true = 0
+                    # type of shot
+                    if Stage.player.sprite.timer_power_shot >= 1:
+                        Stage.player.sprite.is_shooting = True
+                        Stage.player.sprite.launch_projectile(0)
+                    else:
+                        Stage.player.sprite.is_shooting = True
+                        Stage.player.sprite.launch_projectile(1)
+                    Stage.player.sprite.timer_power_shot = Stage.player.sprite.timer_power_shot_max
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+    if Stage.player.sprite.press_down_true == 1:
+        if Stage.player.sprite.timer_power_shot > 0:
+            Stage.player.sprite.timer_power_shot -= 1
     for projectile in Stage.player.sprite.all_projectiles:
         projectile.move()
-
     screen.fill('black')
     background_image = pygame.image.load('../game/Resources/background/background.png').convert_alpha()
     for i in range(45):

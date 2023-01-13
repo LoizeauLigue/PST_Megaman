@@ -1,15 +1,16 @@
 level_map = [
-'                        ',
-'                        ',
-'                        ',
-'XX  B  XX      XX   XX  ',
-'XX                      ',
-'XXXX      P   E         ',
-'XXXX                    ',
-'XX                      ',
-'                        ',
-'   XXXX                 ',
-'XXXXXXXXXXXXXXXXXXXXXXX ']
+'X                                               X',
+'X                                               X',
+'X                                               X',
+'XXX     XX      XX   XX                         X',
+'XXX                                             X',
+'XXXXX      P   E                                X',
+'XXXXX                               C     B     X',
+'XXX                        XXXXXXXXXXXXXXXXXXXXXX',
+'X                         XXXXXXXXXXXXXXXXXXXXXXX',
+'X   XXXX  C              XXXXXXXXXXXXXXXXXXXXXXXX',
+'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX']
 
 title_size = 64
 screen_width = 1000
