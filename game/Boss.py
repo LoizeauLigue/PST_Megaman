@@ -203,8 +203,3 @@ class Boss(pygame.sprite.Sprite):
 
 
 
-
-
-
-
-
