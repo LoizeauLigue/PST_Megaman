@@ -159,7 +159,6 @@ class Player(pygame.sprite.Sprite):
                     else:
                         self.status = 'idle'
 
-
     def shooting_move(self):
         for projectile in self.all_projectiles:
             projectile.move()
