@@ -237,4 +237,9 @@ class Stage:
         self.collision_player_enemy()
         self.collision_player_boss()
         self.collision_projectile_tile()
+        for sprite_boss in self.boss.sprites():
+            if sprite_boss.health <= 0:
+                self.boss.remove(sprite_boss)
+
+
 
